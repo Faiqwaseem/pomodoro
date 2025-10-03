@@ -125,7 +125,7 @@ const Main = () => {
                 </div>
 
                 <div className="taskbar">
-                    <div className="input" role="group" aria-label="What are you working on?">
+                    {/* <div className="input" role="group" aria-label="What are you working on?">
                         <svg
                             width="18"
                             height="18"
@@ -146,7 +146,7 @@ const Main = () => {
                             placeholder="What are you working on? (UI only)"
                             aria-label="Task name"
                         />
-                    </div>
+                    </div> */}
 
                     <div className="controls">
                         <button onClick={handleStart} className="btn" aria-label="Start timer">

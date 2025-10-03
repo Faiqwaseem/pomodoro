@@ -8,10 +8,6 @@ function App() {
     <>
       <Header />
       <Main />
-      <footer>
-        <span>UI prototype — HTML + CSS only (no JS). Fully responsive.</span>
-        <span>Made with ❤ for productivity</span>
-      </footer>
     </>
   )
 }
