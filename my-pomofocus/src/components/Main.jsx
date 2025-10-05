@@ -5,7 +5,8 @@ const Main = () => {
     const [modes, setModes] = useState(25);
     const [session, setSession] = useState("WORK SESSION");
     const [timeLeft, setTimeLeft] = useState(modes * 60);
-    const [isRunning, setIsRunning] = useState(false)
+    const [isRunning, setIsRunning] = useState(false);
+    const [modalAddTask, setModalAddTask] = useState(false)
 
     useEffect(() => {
         setTimeLeft(modes * 60)
@@ -125,28 +126,7 @@ const Main = () => {
                 </div>
 
                 <div className="taskbar">
-                    {/* <div className="input" role="group" aria-label="What are you working on?">
-                        <svg
-                            width="18"
-                            height="18"
-                            viewBox="0 0 24 24"
-                            fill="none"
-                            xmlns="http://www.w3.org/2000/svg"
-                            aria-hidden="true"
-                        >
-                            <path
-                                d="M5 12h14M5 6h14M5 18h14"
-                                stroke="currentColor"
-                                strokeWidth="2"
-                                strokeLinecap="round"
-                            />
-                        </svg>
-                        <input
-                            type="text"
-                            placeholder="What are you working on? (UI only)"
-                            aria-label="Task name"
-                        />
-                    </div> */}
+
 
                     <div className="controls">
                         <button onClick={handleStart} className="btn" aria-label="Start timer">
@@ -161,28 +141,84 @@ const Main = () => {
 
             {/* Right: Tasks */}
             <aside className="card tasks" aria-labelledby="tasks-heading">
-                <h3 id="tasks-heading">Tasks</h3>
 
-                <div className="add" role="button" tabIndex={0} aria-label="Add a task">
-                    <svg
-                        width="18"
-                        height="18"
-                        viewBox="0 0 24 24"
-                        fill="none"
-                        xmlns="http://www.w3.org/2000/svg"
-                        aria-hidden="true"
+
+                <h3 id="tasks-heading">Tasks</h3>
+                {modalAddTask ?
+
+
+                    <div className="modal-overlay">
+                        <div className="modal">
+                            <h3>Add New Task</h3>
+
+                            <div
+                                className="input"
+                                role="group"
+                                aria-label="What are you working on?"
+                            >
+                                <svg
+                                    width="18"
+                                    height="18"
+                                    viewBox="0 0 24 24"
+                                    fill="none"
+                                    xmlns="http://www.w3.org/2000/svg"
+                                    aria-hidden="true"
+                                >
+                                    <path
+                                        d="M5 12h14M5 6h14M5 18h14"
+                                        stroke="currentColor"
+                                        strokeWidth="2"
+                                        strokeLinecap="round"
+                                    />
+                                </svg>
+                                <input
+                                    type="text"
+                                    placeholder="What are you working on?"
+                                    aria-label="Task name"
+                                   
+                                />
+                            </div>
+
+                            <div className="modal-actions">
+                                <button className="btn">
+                                    Save
+                                </button>
+                                <button
+                                    className="btn alt"
+                                    onClick={() => setModalAddTask(false)}
+                                >
+                                    Cancel
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+
+                    :
+                    <div className="add" role="button" tabIndex={0} aria-label="Add a task"
+                        onClick={() => setModalAddTask(true)}
                     >
-                        <path
-                            d="M12 5v14M5 12h14"
-                            stroke="currentColor"
-                            strokeWidth="2"
-                            strokeLinecap="round"
-                        />
-                    </svg>
-                    <span>
-                        <b>Add Task</b> — quick capture
-                    </span>
-                </div>
+                        <svg
+                            width="18"
+                            height="18"
+                            viewBox="0 0 24 24"
+                            fill="none"
+                            xmlns="http://www.w3.org/2000/svg"
+                            aria-hidden="true"
+                        >
+                            <path
+                                d="M12 5v14M5 12h14"
+                                stroke="currentColor"
+                                strokeWidth="2"
+                                strokeLinecap="round"
+                            />
+                        </svg>
+                        <span>
+                            <b>Add Task</b> — quick capture
+                        </span>
+                    </div>
+
+                }
+
 
                 <article className="task">
                     <div className="task-row">
@@ -225,7 +261,7 @@ const Main = () => {
                     </div>
                 </div>
             </aside>
-        </main>
+        </main >
 
     )
 }
