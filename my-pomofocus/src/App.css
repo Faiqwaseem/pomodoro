@@ -199,6 +199,10 @@ header.appbar {
   border: 1px solid rgba(255, 255, 255, .06);
 }
 
+.tab:hover {
+  background: #1f2a61;
+}
+
 .tab.active {
   background: var(--accent);
   color: #fff;
@@ -416,7 +420,7 @@ header.appbar {
 
 .task-meta {
   color: var(--muted);
-  font-size: 13px;
+  font-size: 15px;
 }
 
 .progress {
@@ -433,6 +437,12 @@ header.appbar {
   inset: 0;
   width: 45%;
   background: linear-gradient(90deg, var(--accent), #ff7a7c);
+}
+
+.no-task {
+  color: #777;
+  text-align: center;
+  font-style: italic;
 }
 
 .add {

@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react'
-
+import { PiDotsThreeOutlineVerticalFill } from "react-icons/pi";
 
 const Main = () => {
     const [modes, setModes] = useState(25);
@@ -7,10 +7,22 @@ const Main = () => {
     const [timeLeft, setTimeLeft] = useState(modes * 60);
     const [isRunning, setIsRunning] = useState(false);
     const [modalAddTask, setModalAddTask] = useState(false)
+    const [taskName, setTaskName] = useState("")
+    const [task, setTask] = useState(() => {
+        const saved = localStorage.getItem("task");
+        return saved ? JSON.parse(saved) : [];
+    })
+
+    console.log(task)
+
+
+
 
     useEffect(() => {
         setTimeLeft(modes * 60)
-    }, [modes])
+        const savedLocal = localStorage.setItem('task', JSON.stringify(task));
+        console.log(savedLocal)
+    }, [modes, task])
 
     useEffect(() => {
         let timer;
@@ -61,17 +73,8 @@ const Main = () => {
         setIsRunning(false);
     }
 
-
-
-
-
     const minutes = Math.floor(timeLeft / 60);
     const seconds = timeLeft % 60;
-
-    console.log("minutes", minutes, "seconds", seconds)
-
-
-
 
     function handleStart() {
 
@@ -83,6 +86,26 @@ const Main = () => {
         setTimeLeft(modes * 60)
 
     }
+
+
+    const handleSaveTask = () => {
+        if (!taskName) {
+            return;
+        }
+        else if (taskName.trim() !== "") {
+            const newTask = {
+                id: Date.now(),
+                name: taskName,
+                complete: false
+            }
+            setTask([...task, newTask])
+            setTaskName("")
+            setModalAddTask(false)
+        }
+
+
+    }
+
 
     return (
 
@@ -175,12 +198,16 @@ const Main = () => {
                                     type="text"
                                     placeholder="What are you working on?"
                                     aria-label="Task name"
-                                   
+                                    value={taskName}
+                                    onChange={(e) => setTaskName(e.target.value)}
                                 />
                             </div>
 
                             <div className="modal-actions">
-                                <button className="btn">
+                                <button className="btn"
+                                    onClick={handleSaveTask}
+                                >
+
                                     Save
                                 </button>
                                 <button
@@ -219,32 +246,24 @@ const Main = () => {
 
                 }
 
+                {task.length == 0 ? <p className="no-task">No tasks added yet.</p>
+                    :
 
-                <article className="task">
-                    <div className="task-row">
-                        <input type="checkbox" id="t1" />
-                        <label className="task-title" htmlFor="t1">
-                            Design landing header
-                        </label>
-                        <span className="task-meta">2/4</span>
-                    </div>
-                    <div className="progress" aria-hidden="true">
-                        <span></span>
-                    </div>
-                </article>
+                    task.map((task) => (<article className="task">
+                        <div className="task-row">
+                            <input type="checkbox" id={task.id} />
+                            <label className="task-title" htmlFor="t1">
+                                {task.name}
+                            </label>
+                            <span className="task-meta">2/4 <PiDotsThreeOutlineVerticalFill /></span>
 
-                <article className="task">
-                    <div className="task-row">
-                        <input type="checkbox" id="t2" />
-                        <label className="task-title" htmlFor="t2">
-                            Write copy for features
-                        </label>
-                        <span className="task-meta">1/4</span>
-                    </div>
-                    <div className="progress" aria-hidden="true">
-                        <span style={{ width: "25%" }}></span>
-                    </div>
-                </article>
+                        </div>
+                        {/* <div className="progress" aria-hidden="true">
+                            <span></span>
+                        </div> */}
+                    </article>
+                    ))
+                }
 
                 <div className="stats" aria-label="Today stats">
                     <div className="stat">
