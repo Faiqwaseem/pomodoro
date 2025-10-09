@@ -1,19 +1,21 @@
 import React, { useState, useEffect } from 'react'
 import { PiDotsThreeOutlineVerticalFill } from "react-icons/pi";
-
+import { MdDeleteForever } from "react-icons/md";
+import { RiEdit2Fill } from "react-icons/ri";
 const Main = () => {
-    const [modes, setModes] = useState(25);
+    const [modes, setModes] = useState(0);
     const [session, setSession] = useState("WORK SESSION");
     const [timeLeft, setTimeLeft] = useState(modes * 60);
-    const [isRunning, setIsRunning] = useState(false);
     const [modalAddTask, setModalAddTask] = useState(false)
+    const [isRunning, setIsRunning] = useState(null);
     const [taskName, setTaskName] = useState("")
+    const [isActive, setIsActive] = useState("")
     const [task, setTask] = useState(() => {
         const saved = localStorage.getItem("task");
         return saved ? JSON.parse(saved) : [];
     })
 
-    console.log(task)
+
 
 
 
@@ -52,18 +54,26 @@ const Main = () => {
         }
     }, [timeLeft, isRunning]);
 
-
-
+    const minutes = Math.floor(timeLeft / 60);
+    const seconds = timeLeft % 60;
+    console.log(timeLeft)
     function pomo() {
+
         setModes(1)
+        console.log(timeLeft)
         setSession("WORK SESSION")
+        setIsActive('pomo')
         setIsRunning(false);
     }
 
-    function ShortBreak() {
+    function shortBreak() {
         setModes(1)
         setSession("BREAK SESSION")
         setIsRunning(false)
+        setIsActive('shortBreak');
+
+        timeLeft == 0 ? pomo() : null
+
     }
 
 
@@ -71,10 +81,10 @@ const Main = () => {
         setModes(30)
         setSession("LONG BREAK SESSION")
         setIsRunning(false);
+        setIsActive('longBreak')
     }
 
-    const minutes = Math.floor(timeLeft / 60);
-    const seconds = timeLeft % 60;
+
 
     function handleStart() {
 
@@ -126,13 +136,13 @@ const Main = () => {
                 </h2>
 
                 <div className="modes" role="tablist" aria-label="Timer modes">
-                    <button onClick={pomo} className="tab active" role="tab" aria-selected="true">
+                    <button onClick={pomo} className={`tab ${isActive === 'pomo' ? 'active' : ""}`}>
                         Pomodoro
                     </button>
-                    <button onClick={ShortBreak} className="tab" role="tab" aria-selected="false">
+                    <button onClick={shortBreak} className={`tab ${isActive === 'shortBreak' ? 'active' : ""}`}>
                         Short Break
                     </button>
-                    <button onClick={longBreak} className="tab" role="tab" aria-selected="false">
+                    <button onClick={longBreak} className={`tab ${isActive === 'longBreak' ? 'active' : ""}`}>
                         Long Break
                     </button>
                 </div>
@@ -258,9 +268,9 @@ const Main = () => {
                             <span className="task-meta">2/4 <PiDotsThreeOutlineVerticalFill /></span>
 
                         </div>
-                        {/* <div className="progress" aria-hidden="true">
+                        <div className="progress" aria-hidden="true">
                             <span></span>
-                        </div> */}
+                        </div>
                     </article>
                     ))
                 }
