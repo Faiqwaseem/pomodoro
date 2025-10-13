@@ -336,7 +336,10 @@ header.appbar {
     opacity: 1;
   }
 }
-
+.delete{
+  font-size: 17px;
+  color: #ff4d4f;
+}
 .modal h3 {
   font-size: 20px;
   margin: 10px !important;

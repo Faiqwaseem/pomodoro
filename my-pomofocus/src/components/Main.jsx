@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect, useRef } from 'react'
 import { PiDotsThreeOutlineVerticalFill } from "react-icons/pi";
 import { MdDeleteForever } from "react-icons/md";
 import { RiEdit2Fill } from "react-icons/ri";
@@ -13,13 +13,13 @@ const Main = () => {
     const [task, setTask] = useState(() => {
         const saved = localStorage.getItem("task");
         return saved ? JSON.parse(saved) : [];
-    })
+    });
 
 
 
 
-
-
+    const audioRef = useRef(new Audio('/ding.mp3'));
+    audioRef.current.volume = 1;
     useEffect(() => {
         setTimeLeft(modes * 60)
         const savedLocal = localStorage.setItem('task', JSON.stringify(task));
@@ -48,40 +48,66 @@ const Main = () => {
 
     useEffect(() => {
 
-        if (timeLeft <= 0 && isRunning) {
+        if (timeLeft <= 0 && isActive === 'pomo' && isRunning) {
             setIsRunning(false);
+            shortBreak()
+            audioRef.current.play();
 
+        } else if (timeLeft <= 0 && isActive === 'shortBreak' && isRunning) {
+            setIsRunning(false);
+            pomo()
+            audioRef.current.play();
         }
-    }, [timeLeft, isRunning]);
+
+    }, [timeLeft, isRunning, isActive]);
 
     const minutes = Math.floor(timeLeft / 60);
     const seconds = timeLeft % 60;
     console.log(timeLeft)
     function pomo() {
-
         setModes(1)
-        console.log(timeLeft)
         setSession("WORK SESSION")
         setIsActive('pomo')
-        setIsRunning(false);
+
     }
 
     function shortBreak() {
         setModes(1)
         setSession("BREAK SESSION")
-        setIsRunning(false)
-        setIsActive('shortBreak');
-
-        timeLeft == 0 ? pomo() : null
-
+        setIsActive('shortBreak')
     }
 
 
     function longBreak() {
         setModes(30)
         setSession("LONG BREAK SESSION")
-        setIsRunning(false);
         setIsActive('longBreak')
+    }
+ const handleSaveTask = () => {
+        if (!taskName) {
+            return;
+        }
+        else if (taskName.trim() !== "") {
+            const newTask = {
+                id: Date.now(),
+                name: taskName,
+                complete: false
+            }
+            const newtasks = [...task, newTask]
+            setTask(newtasks)
+            setTaskName("")
+            setModalAddTask(false)
+        }
+
+
+    }
+
+     
+
+    const handleDelete = (index) => {
+        const newtasks = [...task];
+        newtasks.splice(index, 1);
+         setTask(newtasks)
     }
 
 
@@ -98,23 +124,7 @@ const Main = () => {
     }
 
 
-    const handleSaveTask = () => {
-        if (!taskName) {
-            return;
-        }
-        else if (taskName.trim() !== "") {
-            const newTask = {
-                id: Date.now(),
-                name: taskName,
-                complete: false
-            }
-            setTask([...task, newTask])
-            setTaskName("")
-            setModalAddTask(false)
-        }
-
-
-    }
+   
 
 
     return (
@@ -259,17 +269,19 @@ const Main = () => {
                 {task.length == 0 ? <p className="no-task">No tasks added yet.</p>
                     :
 
-                    task.map((task) => (<article className="task">
-                        <div className="task-row">
+                    task.slice(0, 3).map((task, index) => (<article className="task">
+                        <div className="task-row" >
+
                             <input type="checkbox" id={task.id} />
                             <label className="task-title" htmlFor="t1">
                                 {task.name}
                             </label>
-                            <span className="task-meta">2/4 <PiDotsThreeOutlineVerticalFill /></span>
+
+                            <span className="task-meta">2/4  <span className='delete'><MdDeleteForever onClick={() => handleDelete(index)} /></span></span>
 
                         </div>
-                        <div className="progress" aria-hidden="true">
-                            <span></span>
+                        <div>
+
                         </div>
                     </article>
                     ))
