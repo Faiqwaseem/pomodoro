@@ -5,27 +5,25 @@ import { RiEdit2Fill } from "react-icons/ri";
 const Main = () => {
     const [modes, setModes] = useState(0);
     const [session, setSession] = useState("WORK SESSION");
-    const [timeLeft, setTimeLeft] = useState(modes * 60);
-    const [modalAddTask, setModalAddTask] = useState(false)
-    const [isRunning, setIsRunning] = useState(null);
-    const [taskName, setTaskName] = useState("")
-    const [isActive, setIsActive] = useState("")
+    const [timeLeft, setTimeLeft] = useState(0);
+    const [modalAddTask, setModalAddTask] = useState(false);
+    const [isRunning, setIsRunning] = useState(false);
+    const [taskName, setTaskName] = useState("");
+    const [isActive, setIsActive] = useState("");
     const [task, setTask] = useState(() => {
         const saved = localStorage.getItem("task");
         return saved ? JSON.parse(saved) : [];
     });
 
-
-
-
-    const audioRef = useRef(new Audio('/ding.mp3'));
+    const audioRef = useRef(new Audio("/ding.mp3"));
     audioRef.current.volume = 1;
-    useEffect(() => {
-        setTimeLeft(modes * 60)
-        const savedLocal = localStorage.setItem('task', JSON.stringify(task));
-        console.log(savedLocal)
-    }, [modes, task])
 
+    // ✅ Save tasks to localStorage
+    useEffect(() => {
+        localStorage.setItem("task", JSON.stringify(task));
+    }, [task]);
+
+    // ✅ Timer logic
     useEffect(() => {
         let timer;
         if (isRunning) {
@@ -36,97 +34,70 @@ const Main = () => {
                     } else {
                         clearInterval(timer);
                         setIsRunning(false);
-                        alert("Time's up!");
+                        audioRef.current.play();
+                        if (isActive === "pomo") shortBreak();
+                        else if (isActive === "shortBreak") pomo();
+                        else if (isActive === "longBreak") pomo();
                         return 0;
                     }
                 });
             }, 1000);
         }
         return () => clearInterval(timer);
-    }, [isRunning]);
+    }, [isRunning, isActive]);
 
-
-    useEffect(() => {
-
-        if (timeLeft <= 0 && isActive === 'pomo' && isRunning) {
-            setIsRunning(false);
-            shortBreak()
-            audioRef.current.play();
-
-        } else if (timeLeft <= 0 && isActive === 'shortBreak' && isRunning) {
-            setIsRunning(false);
-            pomo()
-            audioRef.current.play();
-        }
-
-    }, [timeLeft, isRunning, isActive]);
-
-    const minutes = Math.floor(timeLeft / 60);
-    const seconds = timeLeft % 60;
-    console.log(timeLeft)
+    // ✅ Functions
     function pomo() {
-        setModes(1)
-        setSession("WORK SESSION")
-        setIsActive('pomo')
-
+        setIsRunning(false);
+        setModes(25);
+        setSession("WORK SESSION");
+        setIsActive("pomo");
+        setTimeLeft(25 * 60);
     }
 
     function shortBreak() {
-        setModes(1)
-        setSession("BREAK SESSION")
-        setIsActive('shortBreak')
+        setIsRunning(false);
+        setModes(5);
+        setSession("SHORT BREAK");
+        setIsActive("shortBreak");
+        setTimeLeft(5 * 60);
     }
-
 
     function longBreak() {
-        setModes(30)
-        setSession("LONG BREAK SESSION")
-        setIsActive('longBreak')
+        setIsRunning(false);
+        setModes(30);
+        setSession("LONG BREAK");
+        setIsActive("longBreak");
+        setTimeLeft(30 * 60);
     }
- const handleSaveTask = () => {
-        if (!taskName) {
-            return;
-        }
-        else if (taskName.trim() !== "") {
-            const newTask = {
-                id: Date.now(),
-                name: taskName,
-                complete: false
-            }
-            const newtasks = [...task, newTask]
-            setTask(newtasks)
-            setTaskName("")
-            setModalAddTask(false)
-        }
-
-
-    }
-
-     
-
-    const handleDelete = (index) => {
-        const newtasks = [...task];
-        newtasks.splice(index, 1);
-         setTask(newtasks)
-    }
-
-
 
     function handleStart() {
-
         if (timeLeft > 0) setIsRunning(true);
     }
+
     function handleReset() {
-
         setIsRunning(false);
-        setTimeLeft(modes * 60)
-
+        setTimeLeft(modes * 60);
     }
 
+    const handleSaveTask = () => {
+        if (!taskName.trim()) return;
+        const newTask = {
+            id: Date.now(),
+            name: taskName,
+            complete: false,
+        };
+        setTask((prev) => [...prev, newTask]);
+        setTaskName("");
+        setModalAddTask(false);
+    };
 
-   
+    const handleDelete = (id) => {
+        setTask((prev) => prev.filter((t) => t.id !== id));
+    };
 
-
+    const minutes = Math.floor(timeLeft / 60);
+    const seconds = timeLeft % 60;
     return (
 
         <main className="container" role="main">
@@ -269,7 +240,7 @@ const Main = () => {
                 {task.length == 0 ? <p className="no-task">No tasks added yet.</p>
                     :
 
-                    task.slice(0, 3).map((task, index) => (<article className="task">
+                    task.slice(0, 3).map((task) => (<article className="task">
                         <div className="task-row" >
 
                             <input type="checkbox" id={task.id} />
@@ -277,7 +248,7 @@ const Main = () => {
                                 {task.name}
                             </label>
 
-                            <span className="task-meta">2/4  <span className='delete'><MdDeleteForever onClick={() => handleDelete(index)} /></span></span>
+                            <span className="task-meta">2/4  <span className='delete'><MdDeleteForever onClick={() => handleDelete(task.id)} /></span></span>
 
                         </div>
                         <div>
