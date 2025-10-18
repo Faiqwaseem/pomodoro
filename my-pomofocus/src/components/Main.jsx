@@ -10,6 +10,7 @@ const Main = () => {
     const [isRunning, setIsRunning] = useState(false);
     const [taskName, setTaskName] = useState("");
     const [isActive, setIsActive] = useState("");
+    const [countPomo, setCountPomo] = useState(0);
     const [task, setTask] = useState(() => {
         const saved = localStorage.getItem("task");
         return saved ? JSON.parse(saved) : [];
@@ -35,7 +36,13 @@ const Main = () => {
                         clearInterval(timer);
                         setIsRunning(false);
                         audioRef.current.play();
-                        if (isActive === "pomo") shortBreak();
+                        if (isActive === "pomo") {
+                            shortBreak();
+                        }
+                        setCountPomo(countPomo + 1);
+                        if (countPomo === 4) {
+                            return;
+                        }
                         else if (isActive === "shortBreak") pomo();
                         else if (isActive === "longBreak") pomo();
                         return 0;
@@ -248,7 +255,7 @@ const Main = () => {
                                 {task.name}
                             </label>
 
-                            <span className="task-meta">2/4  <span className='delete'><MdDeleteForever onClick={() => handleDelete(task.id)} /></span></span>
+                            <span className="task-meta">{countPomo}/4  <span className='delete'><MdDeleteForever onClick={() => handleDelete(task.id)} /></span></span>
 
                         </div>
                         <div>
@@ -260,7 +267,7 @@ const Main = () => {
 
                 <div className="stats" aria-label="Today stats">
                     <div className="stat">
-                        <div className="v">03</div>
+                        <div className="v">{countPomo > 0 ? `0${countPomo}` : 0}</div>
                         <div className="k">Pomodoros</div>
                     </div>
                     <div className="stat">

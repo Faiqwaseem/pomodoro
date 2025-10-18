@@ -1,13 +1,23 @@
 import './App.css'
-import Header from './components/header';
-import Main from './components/Main';
+
+import {
+  createBrowserRouter,
+  RouterProvider,
+} from "react-router";
+import Home from './page/Home';
 function App() {
 
+  let router = createBrowserRouter([
+    {
+      path: "/",
+      Component: Home,
 
+    },
+
+  ]);
   return (
     <>
-      <Header />
-      <Main />
+      <RouterProvider router={router} />
     </>
   )
 }
