@@ -2,6 +2,7 @@ import React, { useState, useEffect, useRef } from 'react'
 import { PiDotsThreeOutlineVerticalFill } from "react-icons/pi";
 import { MdDeleteForever } from "react-icons/md";
 import { RiEdit2Fill } from "react-icons/ri";
+import Swal from 'sweetalert2'
 const Main = () => {
     const [modes, setModes] = useState(0);
     const [session, setSession] = useState("WORK SESSION");
@@ -11,6 +12,7 @@ const Main = () => {
     const [taskName, setTaskName] = useState("");
     const [isActive, setIsActive] = useState("");
     const [countPomo, setCountPomo] = useState(0);
+    const [isChecked, setIsChecked] = useState(false);
     const [task, setTask] = useState(() => {
         const saved = localStorage.getItem("task");
         return saved ? JSON.parse(saved) : [];
@@ -103,6 +105,17 @@ const Main = () => {
         setTask((prev) => prev.filter((t) => t.id !== id));
     };
 
+    // handle Checked
+    if (isChecked) {
+        Swal.fire({
+            position: "top-end",
+            icon: "success",
+            title: "You've finished all your tasks for today! 🎉",
+            showConfirmButton: true,
+
+        });
+    }
+    console.log(isChecked)
     const minutes = Math.floor(timeLeft / 60);
     const seconds = timeLeft % 60;
     return (
@@ -250,7 +263,9 @@ const Main = () => {
                     task.slice(0, 3).map((task) => (<article className="task">
                         <div className="task-row" >
 
-                            <input type="checkbox" id={task.id} />
+                            <input type="checkbox" checked={isChecked}
+                                onChange={(e) => setIsChecked(e.target.checked)}
+                                id={task.id} />
                             <label className="task-title" htmlFor="t1">
                                 {task.name}
                             </label>
