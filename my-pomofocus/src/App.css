@@ -336,10 +336,12 @@ header.appbar {
     opacity: 1;
   }
 }
-.delete{
+
+.delete {
   font-size: 17px;
   color: #ff4d4f;
 }
+
 .modal h3 {
   font-size: 20px;
   margin: 10px !important;
@@ -349,7 +351,7 @@ header.appbar {
 
 .input svg {
   color: #fff;
-  
+
 }
 
 .input input {
@@ -358,6 +360,55 @@ header.appbar {
   flex: 1;
   font-size: 14px;
   background: transparent;
+}
+
+.checkAlert {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
+  gap: 1rem;
+  color: #0a0e20;
+  background-color: white;
+  max-width: 495px;
+  border-radius: 16px;
+  padding: 2px 10px;
+  text-align: center;
+  animation: scaleIn 1s ease;
+}
+
+.checkCenter {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-pack: center;
+  -webkit-justify-content: center;
+  -ms-flex-pack: center;
+  justify-content: center;
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  width: 100%;
+  -webkit-transform: translateY(-22px);
+  -ms-transform: translateY(-22px);
+  transform: translateY(-22px);
+  -webkit-transition: 0.5s all cubic-bezier(0, 0.93, 0.59, 0.87);
+  transition: 0.5s all cubic-bezier(0, 0.93, 0.59, 0.87);
+  padding: 0 14px;
+  box-sizing: border-box;
+}
+
+.checkAlert button{
+  background-color: #22c55e;
+  color: white;
+  border: none;
+  padding: 8px;
+  border-radius: 2px
 }
 
 .modal-actions {

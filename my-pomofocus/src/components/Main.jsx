@@ -3,6 +3,7 @@ import { PiDotsThreeOutlineVerticalFill } from "react-icons/pi";
 import { MdDeleteForever } from "react-icons/md";
 import { RiEdit2Fill } from "react-icons/ri";
 import Swal from 'sweetalert2'
+import Modal from "../components/Modal";
 const Main = () => {
     const [modes, setModes] = useState(0);
     const [session, setSession] = useState("WORK SESSION");
@@ -103,19 +104,10 @@ const Main = () => {
 
     const handleDelete = (id) => {
         setTask((prev) => prev.filter((t) => t.id !== id));
+        setIsChecked(false)
     };
 
-    // handle Checked
-    if (isChecked) {
-        Swal.fire({
-            position: "top-end",
-            icon: "success",
-            title: "You've finished all your tasks for today! 🎉",
-            showConfirmButton: true,
 
-        });
-    }
-    console.log(isChecked)
     const minutes = Math.floor(timeLeft / 60);
     const seconds = timeLeft % 60;
     return (
@@ -271,7 +263,15 @@ const Main = () => {
                             </label>
 
                             <span className="task-meta">{countPomo}/4  <span className='delete'><MdDeleteForever onClick={() => handleDelete(task.id)} /></span></span>
-
+                            {isChecked ?
+                                (<Modal>
+                                    <div className='checkCenter'>
+                                        <div className='checkAlert'>
+                                            <p>You've finished all your tasks for today 🎉 </p>
+                                            <button onClick={() => handleDelete(task.id)}>Clear Task</button>
+                                        </div>
+                                    </div>
+                                </Modal>) : null}
                         </div>
                         <div>
 
@@ -279,6 +279,7 @@ const Main = () => {
                     </article>
                     ))
                 }
+
 
                 <div className="stats" aria-label="Today stats">
                     <div className="stat">
