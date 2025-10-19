@@ -8,8 +8,6 @@ const Header = () => {
         return savedTheme ? savedTheme : "Dark";
     });
 
-
-
     useEffect(() => {
         document.documentElement.setAttribute("data-theme", theme.toLowerCase())
         localStorage.setItem("theme", theme)
@@ -39,13 +37,11 @@ const Header = () => {
                             <option value="Dark">Dark</option>
                         </select>
                     </label>
-
                     {/* Settings Button */}
                     <button className="pill-btn secondary" aria-label="Settings">
                         <Settings size={18} style={{ marginRight: "6px" }} />
                         Settings
                     </button>
-
                     {/* Sign Up Button */}
                     <button className="pill-btn" aria-label="Sign up">
                         <UserPlus size={18} style={{ marginRight: "6px" }} />
@@ -53,7 +49,6 @@ const Header = () => {
                     </button>
                 </nav>
             </header>
-
         </div>
     )
 }
