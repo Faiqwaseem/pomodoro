@@ -14,6 +14,7 @@ const Main = () => {
     const [isActive, setIsActive] = useState("");
     const [countPomo, setCountPomo] = useState(0);
     const [isChecked, setIsChecked] = useState(false);
+    const [checkedTask, setChecktask] = useState([]);
     const [task, setTask] = useState(() => {
         const saved = localStorage.getItem("task");
         return saved ? JSON.parse(saved) : [];
@@ -107,6 +108,15 @@ const Main = () => {
         setIsChecked(false)
     };
 
+
+    const handleCheckBoxChange = (id) => {
+        setIsChecked(true)
+        if(checkedTask.includes(id)){
+            setChecktask(checkedTask.filter(taskId => taskId !== id))
+        }else{
+            setChecktask([...checkedTask, id])
+        }
+    }
 
     const minutes = Math.floor(timeLeft / 60);
     const seconds = timeLeft % 60;
@@ -255,10 +265,10 @@ const Main = () => {
                     task.slice(0, 3).map((task) => (<article className="task">
                         <div className="task-row" >
 
-                            <input type="checkbox" checked={isChecked}
-                                onChange={(e) => setIsChecked(e.target.checked)}
+                            <input type="checkbox" checked={checkedTask.includes(task.id)}
+                                onChange={() => handleCheckBoxChange(task.id)}
                                 id={task.id} />
-                            <label className="task-title" htmlFor="t1">
+                            <label className="task-title" htmlFor={task.id}>
                                 {task.name}
                             </label>
 
